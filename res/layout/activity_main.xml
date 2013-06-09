@@ -9,7 +9,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity" >
 
-    <WebView
+    <com.jamtwo.randommeme.MemeWebView
         android:id="@+id/memeView"
         android:layout_width="match_parent"
         android:layout_height="298dp"
