@@ -1,32 +1,50 @@
 package com.jamtwo.randommeme;
 
+import java.io.IOException;
+
 import android.app.Activity;
-import android.content.Context;
+
 import android.os.Bundle;
-import android.view.Display;
 import android.view.Menu;
-import android.view.WindowManager;
-import android.webkit.WebView;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnClickListener {
 
+	private MemeWebView mWebView;
+	private int RandomNumber = 1;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initView();
         
+    }
+    
+    private void initView(){
+    	HTMLParser parser = new HTMLParser();
+    	try {
+			parser.parseHTML("http://quickmeme.com/random/?num="+RandomNumber);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+        Button nextButton = (Button) findViewById(R.id.nextButton);
+        nextButton.setOnClickListener((OnClickListener) this);
+
         
-        WebView webview = (WebView)findViewById(R.id.memeView);
-        webview.getSettings().setJavaScriptEnabled(true);
+        mWebView = (MemeWebView)findViewById(R.id.memeView);
+        mWebView.getSettings().setJavaScriptEnabled(true); //
         
-        webview.setPadding(0, 0, 0, 0);
+        mWebView.setPadding(0, 0, 0, 0);
         
-        webview.getSettings().setLoadWithOverviewMode(true);
-        webview.getSettings().setUseWideViewPort(true);
+        mWebView.getSettings().setLoadWithOverviewMode(true);
+        mWebView.getSettings().setUseWideViewPort(true);
         
-        webview.loadUrl("http://i.qkme.me/3r48s3.jpg");
-        
-        
+        mWebView.loadNextMeme();
     }
 
 
@@ -36,6 +54,16 @@ public class MainActivity extends Activity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
+	@Override
+	public void onClick(View v) {
+		switch(v.getId()){
+		case R.id.nextButton:
+			mWebView.loadNextMeme();
+		}
+		
+	}
+
     
     
     
