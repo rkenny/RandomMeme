@@ -4,6 +4,8 @@ package com.jamtwo.randommeme;
  * Class to parse DOM... we could use this to match a pattern to find image urls
  * lots more great info at:
  * http://argillander.wordpress.com/2011/11/23/get-web-page-source-code-in-android/
+ * 
+ * This class is not fully vetted, so further inspection is needed. 
  */
 
 import java.io.BufferedReader;
