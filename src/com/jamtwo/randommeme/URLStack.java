@@ -2,17 +2,19 @@ package com.jamtwo.randommeme;
 
 import java.util.ArrayList;
 
+
 public class URLStack {
 	
-	private static ArrayList<String> mUrls;
+	private static ILoadMoreMemesListener loadMoreMemesListener;
+	private static ArrayList<Meme> mMemes;
 	private static URLStack mStack =null;
 	private static int mCurrentIndex;
 	
-	// Load more random images when we get to 3 images before the last
+	// Load more random memes when we get to X memes before the last
 	private static int RELOAD_INDEX = 3;
 	
 	protected URLStack(){
-		mUrls = new ArrayList<String>();
+		mMemes = new ArrayList<Meme>();
 	}
 	
 	public static URLStack getInstance(){
@@ -23,22 +25,33 @@ public class URLStack {
 	}
 	
 	public static String getNextUrl(){
-		if (mUrls.size()>0 && mCurrentIndex<=mUrls.size()-1){
-			String next =  mUrls.get(mCurrentIndex);
-			if (mCurrentIndex == mUrls.size()-RELOAD_INDEX){
-				
+		if (mMemes.size()>0 && mCurrentIndex<=mMemes.size()-1){
+			String next =  mMemes.get(mCurrentIndex).getUrl();
+			if (mCurrentIndex == mMemes.size()-RELOAD_INDEX){		//Load more memes
+				loadMoreMemesListener.loadMoreMemes();
 			}
 			mCurrentIndex++;
 			return next;
 		}
 		else{
 			mCurrentIndex=0;
-			return mUrls.get(mCurrentIndex);
+			return mMemes.get(mCurrentIndex).getUrl();
 		}
 	}
 	
-	public static void addUrl(String url){
-		mUrls.add(url);
+	public static void addMeme(Meme meme){
+		mMemes.add(meme);
+	}
+	
+	public static Meme getCurrentMeme(){
+		if (mMemes.size()>(mCurrentIndex-1)){
+			return mMemes.get(mCurrentIndex-1);
+		}
+		return null;
+	}
+	
+	public void registerLoadMoreMemesListener(ILoadMoreMemesListener listener){
+		loadMoreMemesListener = listener;
 	}
 	
 

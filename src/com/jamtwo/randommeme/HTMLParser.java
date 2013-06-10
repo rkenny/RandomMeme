@@ -19,8 +19,17 @@ public class HTMLParser {
         Log.v(TAG, "media: " + media.size());
         for (Element src : media) {
             if (src.tagName().equals("img")){
-            	URLStack.addUrl(src.attr("abs:src"));
-            	Log.v(TAG, "adding_url: " + src.attr("abs:src"));
+            	int width = 100, height = 100;
+            	try{
+            		width = Integer.parseInt(src.attr("width"));
+            		height= Integer.parseInt(src.attr("height"));
+            	}catch(Exception e){
+            		e.printStackTrace();
+            	}
+            	Meme meme = new Meme(src.attr("abs:src"), src.attr("alt"), width, height);
+
+            	Log.v("Parser", "width: " + src.attr("width"));
+            	URLStack.addMeme(meme);
             }
         }
     }

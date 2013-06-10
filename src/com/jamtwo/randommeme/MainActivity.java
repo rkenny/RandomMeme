@@ -9,28 +9,25 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
-public class MainActivity extends Activity implements OnClickListener {
+public class MainActivity extends Activity implements OnClickListener, ILoadMoreMemesListener {
 
 	private MemeWebView mWebView;
-	private int RandomNumber = 1;
+	private int mPageIndex = 0;
+	private int mPageIndexMax = 150;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        URLStack.getInstance().registerLoadMoreMemesListener(this);
         initView();
         
     }
     
     private void initView(){
-    	HTMLParser parser = new HTMLParser();
-    	try {
-			parser.parseHTML("http://quickmeme.com/random/?num="+RandomNumber);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	loadMoreMemes();
     	
         Button nextButton = (Button) findViewById(R.id.nextButton);
         nextButton.setOnClickListener((OnClickListener) this);
@@ -60,8 +57,24 @@ public class MainActivity extends Activity implements OnClickListener {
 		switch(v.getId()){
 		case R.id.nextButton:
 			mWebView.loadNextMeme();
+			TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
+			tvTitle.setText(URLStack.getCurrentMeme().getTitle());
 		}
 		
+	}
+	
+	public void loadMoreMemes(){
+		mPageIndex++;
+		if (mPageIndex > mPageIndexMax){
+			mPageIndex=0;
+		}
+    	HTMLParser parser = new HTMLParser();
+    	try {
+			parser.parseHTML("http://quickmeme.com/random/?num="+mPageIndex);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
     

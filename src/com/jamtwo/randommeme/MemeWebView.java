@@ -18,6 +18,7 @@ public class MemeWebView extends WebView{
 	
 	public void loadNextMeme(){
 		loadUrl(URLStack.getNextUrl());
+		
 	}
 	
 	
