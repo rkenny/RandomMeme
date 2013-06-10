@@ -29,7 +29,7 @@ public class HTMLParser {
             	Meme meme = new Meme(src.attr("abs:src"), src.attr("alt"), width, height);
 
             	Log.v("Parser", "width: " + src.attr("width"));
-            	URLStack.addMeme(meme);
+            	MemeStack.addMeme(meme);
             }
         }
     }

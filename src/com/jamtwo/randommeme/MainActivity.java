@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,7 +22,7 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        URLStack.getInstance().registerLoadMoreMemesListener(this);
+        MemeStack.getInstance().registerLoadMoreMemesListener(this);
         initView();
         
     }
@@ -31,6 +32,9 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
     	
         Button nextButton = (Button) findViewById(R.id.nextButton);
         nextButton.setOnClickListener((OnClickListener) this);
+        
+        Button prevButton = (Button) findViewById(R.id.prevButton);
+        prevButton.setOnClickListener(this);
 
         
         mWebView = (MemeWebView)findViewById(R.id.memeView);
@@ -42,6 +46,7 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
         mWebView.getSettings().setUseWideViewPort(true);
         
         mWebView.loadNextMeme();
+        
     }
 
 
@@ -54,11 +59,18 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 
 	@Override
 	public void onClick(View v) {
+		TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
 		switch(v.getId()){
 		case R.id.nextButton:
 			mWebView.loadNextMeme();
-			TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
-			tvTitle.setText(URLStack.getCurrentMeme().getTitle());
+			tvTitle = (TextView) findViewById(R.id.tvTitle);
+			tvTitle.setText(MemeStack.getCurrentMeme().getTitle());
+			break;
+		case R.id.prevButton:
+			mWebView.loadPrevMeme();
+			tvTitle = (TextView) findViewById(R.id.tvTitle);
+			tvTitle.setText(MemeStack.getCurrentMeme().getTitle());
+			break;
 		}
 		
 	}
@@ -68,6 +80,7 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 		if (mPageIndex > mPageIndexMax){
 			mPageIndex=0;
 		}
+		
     	HTMLParser parser = new HTMLParser();
     	try {
 			parser.parseHTML("http://quickmeme.com/random/?num="+mPageIndex);

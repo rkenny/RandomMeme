@@ -3,39 +3,48 @@ package com.jamtwo.randommeme;
 import java.util.ArrayList;
 
 
-public class URLStack {
+public class MemeStack {
 	
 	private static ILoadMoreMemesListener loadMoreMemesListener;
 	private static ArrayList<Meme> mMemes;
-	private static URLStack mStack =null;
+	private static MemeStack mStack =null;
 	private static int mCurrentIndex;
 	
-	// Load more random memes when we get to X memes before the last
+	// Load more random memes when we get to X memes before the last one
 	private static int RELOAD_INDEX = 3;
 	
-	protected URLStack(){
+	protected MemeStack(){
 		mMemes = new ArrayList<Meme>();
 	}
 	
-	public static URLStack getInstance(){
+	public static MemeStack getInstance(){
 		if (mStack==null){
-			mStack = new URLStack();
+			mStack = new MemeStack();
 		}
 		return mStack;
 	}
 	
-	public static String getNextUrl(){
-		if (mMemes.size()>0 && mCurrentIndex<=mMemes.size()-1){
-			String next =  mMemes.get(mCurrentIndex).getUrl();
+	public static Meme getNextMeme(){
+		if (mMemes.size()>0 && mCurrentIndex<mMemes.size()){
 			if (mCurrentIndex == mMemes.size()-RELOAD_INDEX){		//Load more memes
 				loadMoreMemesListener.loadMoreMemes();
 			}
 			mCurrentIndex++;
-			return next;
+			return mMemes.get(mCurrentIndex);
 		}
 		else{
 			mCurrentIndex=0;
-			return mMemes.get(mCurrentIndex).getUrl();
+			return null;
+		}
+	}
+	
+	public static Meme getPrevMeme(){
+		if (mMemes.size()>0 && mCurrentIndex>0){
+			mCurrentIndex --;
+			return mMemes.get(mCurrentIndex);
+		} else{
+			mCurrentIndex=0;
+			return mMemes.get(mCurrentIndex);
 		}
 	}
 	
@@ -44,8 +53,8 @@ public class URLStack {
 	}
 	
 	public static Meme getCurrentMeme(){
-		if (mMemes.size()>(mCurrentIndex-1)){
-			return mMemes.get(mCurrentIndex-1);
+		if (mMemes.size()>(mCurrentIndex)){
+			return mMemes.get(mCurrentIndex);
 		}
 		return null;
 	}
