@@ -7,11 +7,21 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class HTMLParserAsyncTask extends AsyncTask<String, Void, String>{
-
+	
+	Context context;
+	MemeWebView mWebView;
+	
+	public HTMLParserAsyncTask(Context context, MemeWebView mWebView)
+	{
+		this.context = context;
+		this.mWebView = mWebView;
+	}
+	
 	public void parseHTML(String url) throws IOException{
 		
         Document doc = Jsoup.connect(url).get();
@@ -38,12 +48,21 @@ public class HTMLParserAsyncTask extends AsyncTask<String, Void, String>{
 		if (params!=null && params[0]!=null){
 			try {
 				parseHTML(params[0]);
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		return null;
+	}
+
+	@Override
+	protected void onPostExecute(String result) {
+		// TODO Auto-generated method stub
+		super.onPostExecute(result);
+		
+		mWebView.loadNextMeme(); // if they lose their internet connection, this will start to loop and crash the app
 	}
 }
 

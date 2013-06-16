@@ -1,13 +1,10 @@
 package com.jamtwo.randommeme;
 
-import java.io.IOException;
-
 import android.app.Activity;
-
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,6 +14,7 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 	private MemeWebView mWebView;
 	private int mPageIndex = 0;
 	private int mPageIndexMax = 150;
+	private static final String CLASS = "MainActivity";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +26,6 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
     }
     
     private void initView(){
-    	loadMoreMemes();
-    	
         Button nextButton = (Button) findViewById(R.id.nextButton);
         nextButton.setOnClickListener((OnClickListener) this);
         
@@ -44,8 +40,8 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
         
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
-        
-        mWebView.loadNextMeme();
+        loadMoreMemes();
+        //mWebView.loadNextMeme();
         
     }
 
@@ -76,15 +72,17 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 	}
 	
 	public void loadMoreMemes(){
+		String TAG = CLASS + ".loadMoreMemes";
+		
+		Log.v(TAG, "loading more memes");
 		mPageIndex++;
 		if (mPageIndex > mPageIndexMax){
 			mPageIndex=0;
 		}
 		
-    	HTMLParserAsyncTask parser = new HTMLParserAsyncTask();
+    	HTMLParserAsyncTask parser = new HTMLParserAsyncTask(this, mWebView);
     		
 		parser.execute("http://quickmeme.com/random/?num="+mPageIndex);
-		
 	}
 
     
