@@ -38,7 +38,7 @@ public class MemeWebView extends WebView{
 		String formatted_html = "<!DOCTYPE html>"+
 				"<html>"+
 				"<head></head>"+
-				"<body>"+
+				"<body style='background-color: black;'>"+
 				"<div align=center>"+
 				"<img src=" + url + " width=" + width + " height="+height+"/>"+
 				"</div>"+

@@ -43,7 +43,7 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
         mWebView.getSettings().setJavaScriptEnabled(true); //
         
         mWebView.setPadding(0, 0, 0, 0);
-        
+        mWebView.setBackgroundColor(0x000000);
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
         
