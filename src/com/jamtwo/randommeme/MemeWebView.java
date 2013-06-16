@@ -36,9 +36,10 @@ public class MemeWebView extends WebView{
 	}
 	
 	public void loadNextMeme(){
-		
-		String url = MemeStack.getNextMeme().getUrl();
-		createHTML(url);
+		if (MemeStack.getNextMeme()!=null){
+			String url = MemeStack.getNextMeme().getUrl();
+			createHTML(url);
+		}
 	}
 
 	public void loadPrevMeme() {

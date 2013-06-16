@@ -81,13 +81,10 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 			mPageIndex=0;
 		}
 		
-    	HTMLParser parser = new HTMLParser();
-    	try {
-			parser.parseHTML("http://quickmeme.com/random/?num="+mPageIndex);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	HTMLParserAsyncTask parser = new HTMLParserAsyncTask();
+    		
+		parser.execute("http://quickmeme.com/random/?num="+mPageIndex);
+		
 	}
 
     
