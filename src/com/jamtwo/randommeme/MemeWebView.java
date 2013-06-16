@@ -5,18 +5,30 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.webkit.WebView;
 
 public class MemeWebView extends WebView{
 	public static final String CLASS = "MemeWebView";
+	private GestureDetector flingHandler;
+	
 	public MemeWebView(Context context) {
 		super(context);
+		flingHandler = new GestureDetector(context, new FlingHandler(this)); 
 		// TODO Auto-generated constructor stub
 	}
 	
 	public MemeWebView(Context context, AttributeSet attributeSet){
 		super(context, attributeSet);
+		flingHandler = new GestureDetector(context, new FlingHandler(this));
 	}//
+	
+	 public boolean onTouchEvent(MotionEvent event) {
+		 String TAG = CLASS + ".onTouchEvent()";
+		 Log.w(TAG, "Handling touchEvent");
+         return (flingHandler.onTouchEvent(event) || super.onTouchEvent(event));
+     };
 	
 	private void createHTML(String url){
 		Display display = ((Activity) getContext()).getWindowManager().getDefaultDisplay();

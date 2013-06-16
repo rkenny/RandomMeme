@@ -3,6 +3,7 @@ package com.jamtwo.randommeme;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,9 +17,14 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 	private int mPageIndexMax = 150;
 	private static final String CLASS = "MainActivity";
 	
+    private GestureDetector flingHandler;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        
+        
         setContentView(R.layout.activity_main);
         MemeStack.getInstance().registerLoadMoreMemesListener(this);
         initView();
@@ -40,6 +46,8 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
         
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
+        
+        flingHandler = new GestureDetector(this, new FlingHandler(mWebView));
         loadMoreMemes();
         //mWebView.loadNextMeme();
         
