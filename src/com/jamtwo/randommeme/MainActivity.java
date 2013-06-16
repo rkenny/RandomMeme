@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class MainActivity extends Activity implements OnClickListener, ILoadMoreMemesListener {
@@ -32,13 +33,12 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
     }
     
     private void initView(){
-        Button nextButton = (Button) findViewById(R.id.nextButton);
+        ImageButton nextButton = (ImageButton) findViewById(R.id.nextButton);
         nextButton.setOnClickListener((OnClickListener) this);
         
-        Button prevButton = (Button) findViewById(R.id.prevButton);
+        ImageButton prevButton = (ImageButton) findViewById(R.id.prevButton);
         prevButton.setOnClickListener(this);
 
-        
         mWebView = (MemeWebView)findViewById(R.id.memeView);
         mWebView.getSettings().setJavaScriptEnabled(true); //
         

@@ -15,14 +15,20 @@ public class MemeWebView extends WebView{
 	
 	public MemeWebView(Context context) {
 		super(context);
-		flingHandler = new GestureDetector(context, new FlingHandler(this)); 
+		
+		if(!this.isInEditMode())
+		{
+			flingHandler = new GestureDetector(context, new FlingHandler(this));
+		}
 		// TODO Auto-generated constructor stub
 	}
 	
 	public MemeWebView(Context context, AttributeSet attributeSet){
 		super(context, attributeSet);
-		flingHandler = new GestureDetector(context, new FlingHandler(this));
-	}//
+		if(!this.isInEditMode())
+		{
+			flingHandler = new GestureDetector(context, new FlingHandler(this));
+		}	}//
 	
 	 public boolean onTouchEvent(MotionEvent event) {
 		 String TAG = CLASS + ".onTouchEvent()";
@@ -35,11 +41,13 @@ public class MemeWebView extends WebView{
 		int width = display.getWidth();
 		int height = display.getHeight();
 		
+		
+		
 		String formatted_html = "<!DOCTYPE html>"+
 				"<html>"+
 				"<head></head>"+
 				"<body style='background-color: black;'>"+
-				"<div align=center>"+
+				"<div style='width: "+width+"px; height: "+height+"px; display: block; margin-left: 15%; margin-right: 15%; border-style: solid; border-color: yellow; border-width: 3px; '>"+
 				"<img src=" + url + " width=" + width + " height="+height+"/>"+
 				"</div>"+
 				"</body>"+
@@ -52,6 +60,10 @@ public class MemeWebView extends WebView{
 	{
 		String TAG = CLASS + ".loadNextMeme";
 		Log.v(TAG, "called");
+		if(this.isInEditMode())
+		{
+			return;
+		}
 		if (MemeStack.hasNextMeme()){
 			String url = MemeStack.getNextMeme().getUrl();
 			createHTML(url);
