@@ -3,11 +3,12 @@ package com.jamtwo.randommeme;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Display;
 import android.webkit.WebView;
 
 public class MemeWebView extends WebView{
-	
+	public static final String CLASS = "MemeWebView";
 	public MemeWebView(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
@@ -35,10 +36,17 @@ public class MemeWebView extends WebView{
 		loadData(formatted_html, "text/html", "UTF-8");
 	}
 	
-	public void loadNextMeme(){
-		if (MemeStack.getNextMeme()!=null){
+	public void loadNextMeme()
+	{
+		String TAG = CLASS + ".loadNextMeme";
+		Log.v(TAG, "called");
+		if (MemeStack.hasNextMeme()){
 			String url = MemeStack.getNextMeme().getUrl();
 			createHTML(url);
+		}
+		else
+		{
+			MemeStack.loadMoreMemes();
 		}
 	}
 
