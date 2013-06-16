@@ -4,31 +4,39 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 public class MemeWebView extends WebView{
 	public static final String CLASS = "MemeWebView";
 	private GestureDetector flingHandler;
+	private Context context;
+	
 	
 	public MemeWebView(Context context) {
 		super(context);
-		
-		if(!this.isInEditMode())
-		{
-			flingHandler = new GestureDetector(context, new FlingHandler(this));
-		}
-		// TODO Auto-generated constructor stub
+		initView(context);
 	}
 	
 	public MemeWebView(Context context, AttributeSet attributeSet){
 		super(context, attributeSet);
+		initView(context);
+	}
+	
+	
+	
+	public void initView(Context context)
+	{
+		this.context = context;
 		if(!this.isInEditMode())
 		{
 			flingHandler = new GestureDetector(context, new FlingHandler(this));
-		}	}//
+		}	
+	}
 	
 	 public boolean onTouchEvent(MotionEvent event) {
 		 String TAG = CLASS + ".onTouchEvent()";
@@ -40,8 +48,6 @@ public class MemeWebView extends WebView{
 		Display display = ((Activity) getContext()).getWindowManager().getDefaultDisplay();
 		int width = display.getWidth();
 		int height = display.getHeight();
-		
-		
 		
 		String formatted_html = "<!DOCTYPE html>"+
 				"<html>"+
@@ -67,6 +73,8 @@ public class MemeWebView extends WebView{
 		if (MemeStack.hasNextMeme()){
 			String url = MemeStack.getNextMeme().getUrl();
 			createHTML(url);
+			updateTvTitle();
+			
 		}
 		else
 		{
@@ -77,7 +85,38 @@ public class MemeWebView extends WebView{
 	public void loadPrevMeme() {
 		String url = MemeStack.getPrevMeme().getUrl();
 		createHTML(url);
-		
+		updateTvTitle();
+	}
+	
+	public void updateTvTitle()
+	{
+		TextView tvTitle;
+		tvTitle = (TextView) ((Activity)context).findViewById(R.id.tvTitle);
+		if(MemeStack.getCurrentMeme() != null)
+		{	
+			float textSize;
+			String currentMemeTitle =MemeStack.getCurrentMeme().getTitle();
+			if(currentMemeTitle == null)
+			{
+				currentMemeTitle = "Loading...";
+			}
+			//22 chars?
+			if(currentMemeTitle.length() < 22)
+			{
+				textSize = 15;
+			}
+			else if(currentMemeTitle.length() < 35)
+			{
+				textSize = 13;
+			}
+			else
+			{
+				textSize = 11;
+			}
+
+			tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+			tvTitle.setText(currentMemeTitle);
+		}
 	}
 
 }

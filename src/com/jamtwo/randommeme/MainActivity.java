@@ -23,13 +23,10 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        
-        
         setContentView(R.layout.activity_main);
         MemeStack.getInstance().registerLoadMoreMemesListener(this);
-        initView();
         
+        initView();
     }
     
     private void initView(){
@@ -63,17 +60,19 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 
 	@Override
 	public void onClick(View v) {
-		TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
+//		TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
+//		tvTitle = (TextView) findViewById(R.id.tvTitle);
+//		tvTitle.setText(MemeStack.getCurrentMeme().getTitle());
 		switch(v.getId()){
 		case R.id.nextButton:
 			mWebView.loadNextMeme();
-			tvTitle = (TextView) findViewById(R.id.tvTitle);
-			tvTitle.setText(MemeStack.getCurrentMeme().getTitle());
+			//tvTitle = (TextView) findViewById(R.id.tvTitle);
+			//tvTitle.setText(MemeStack.getCurrentMeme().getTitle());
 			break;
 		case R.id.prevButton:
 			mWebView.loadPrevMeme();
-			tvTitle = (TextView) findViewById(R.id.tvTitle);
-			tvTitle.setText(MemeStack.getCurrentMeme().getTitle());
+			//tvTitle = (TextView) findViewById(R.id.tvTitle);
+			//tvTitle.setText(MemeStack.getCurrentMeme().getTitle());
 			break;
 		}
 		
