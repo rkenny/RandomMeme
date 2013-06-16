@@ -2,8 +2,6 @@ package com.jamtwo.randommeme;
 
 import java.util.ArrayList;
 
-import android.util.Log;
-
 
 public class MemeStack {
 	
@@ -14,8 +12,6 @@ public class MemeStack {
 	
 	// Load more random memes when we get to X memes before the last one
 	private static int RELOAD_INDEX = 3;
-	
-	private static String CLASS = "MemeStack";
 	
 	protected MemeStack(){
 		mMemes = new ArrayList<Meme>();
@@ -53,10 +49,7 @@ public class MemeStack {
 	}
 	
 	public static void addMeme(Meme meme){
-		String TAG = CLASS + ".addMeme";
 		mMemes.add(meme);
-		
-		Log.w(TAG, " complete");
 	}
 	
 	public static Meme getCurrentMeme(){
@@ -69,7 +62,6 @@ public class MemeStack {
 	public void registerLoadMoreMemesListener(ILoadMoreMemesListener listener){
 		loadMoreMemesListener = listener;
 	}
-	
 	
 
 }

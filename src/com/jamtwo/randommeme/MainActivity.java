@@ -28,7 +28,7 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
     }
     
     private void initView(){
-    	
+    	loadMoreMemes();
     	
         Button nextButton = (Button) findViewById(R.id.nextButton);
         nextButton.setOnClickListener((OnClickListener) this);
@@ -45,8 +45,7 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
         
-        loadMoreMemes();
-//        //mWebView.loadNextMeme(); /* !!! */
+        mWebView.loadNextMeme();
         
     }
 
@@ -82,21 +81,10 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 			mPageIndex=0;
 		}
 		
-<<<<<<< HEAD
     	HTMLParserAsyncTask parser = new HTMLParserAsyncTask();
     		
 		parser.execute("http://quickmeme.com/random/?num="+mPageIndex);
 		
-=======
-    	HTMLParser parser = new HTMLParser(this, mWebView);
-    	parser.execute("http://quickmeme.com/random/?num="+mPageIndex);
-//    	try {
-//			parser.parseHTML("http://quickmeme.com/random/?num="+mPageIndex);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
->>>>>>> Converted to AsyncTask
 	}
 
     
