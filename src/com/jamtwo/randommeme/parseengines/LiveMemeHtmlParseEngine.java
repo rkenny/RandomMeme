@@ -11,6 +11,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.util.Log;
 
@@ -48,14 +50,10 @@ public class LiveMemeHtmlParseEngine extends AbstractHTMLParseEngine
 		    InputStream instream = entity.getContent();
 		    try 
 		    {
-		    	Log.w(TAG, "Line 51: This code is returning several bytes less than the entire string");
-		    	//Possibly caused by content type being ISO85something instead of plain ASCII
-		    	//Convert the entity to a byte array?
 		        BufferedReader htmlReader = new BufferedReader(new InputStreamReader(instream));
 		        while ((line = htmlReader.readLine()) != null) 
 		        { 
-		        	html += line; 
-		        	Log.w(TAG, "Length: " + html.length() + " HTML: " + html); 
+		        	html += line;  
 		        }
 		    } 
 		    finally 
@@ -64,9 +62,21 @@ public class LiveMemeHtmlParseEngine extends AbstractHTMLParseEngine
 		    }
 		}
 		
-		//html = html.substring(13, html.length());
+		html = html.substring(13, html.length()-2);
 		
-		Log.w(TAG, "END HTML: " + html);
+		Log.w(TAG, "HTML: " +html.substring(0, 20) + "..."+ html.substring(html.length()-50));
+		try 
+		{
+			JSONObject overallObject = new JSONObject(html);
+			JSONObject t0 = overallObject.getJSONObject("t0");
+			
+		} 
+		catch (JSONException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 //		Elements media = doc.select("[src]");
 //		Log.w(TAG, "There are ["+media.size()+"] elemenets in media.");
 //		for (Element src : media) 
