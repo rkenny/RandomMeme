@@ -1,5 +1,8 @@
 package com.jamtwo.randommeme;
 
+import com.jamtwo.randommeme.parseengines.LiveMemeHtmlParseEngine;
+import com.jamtwo.randommeme.parseengines.QuickMemeHtmlParseEngine;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -88,8 +91,10 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 		}
 		
     	HTMLParserAsyncTask parser = new HTMLParserAsyncTask(this, mWebView);
-    		
+    	parser.parseEngine = new QuickMemeHtmlParseEngine(); //strategy!
+//    	parser.parseEngine = new LiveMemeHtmlParseEngine(); 
 		parser.execute("http://quickmeme.com/random/?num="+mPageIndex);
+    	parser.execute();
 	}
 
     

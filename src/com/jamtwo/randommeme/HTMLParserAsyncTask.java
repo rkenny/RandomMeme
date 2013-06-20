@@ -7,6 +7,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.jamtwo.randommeme.parseengines.HTMLParserEngine;
+import com.jamtwo.randommeme.parseengines.QuickMemeHtmlParseEngine;
+
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -15,6 +18,7 @@ public class HTMLParserAsyncTask extends AsyncTask<String, Void, String>{
 	
 	Context context;
 	MemeWebView mWebView;
+	HTMLParserEngine parseEngine; //= new QuickMemeHtmlParseEngine();
 	
 	public HTMLParserAsyncTask(Context context, MemeWebView mWebView)
 	{
@@ -22,43 +26,31 @@ public class HTMLParserAsyncTask extends AsyncTask<String, Void, String>{
 		this.mWebView = mWebView;
 	}
 	
-	public void parseHTML(String url) throws IOException{
-		
-        Document doc = Jsoup.connect(url).get();
-        Elements media = doc.select("[src]");
-        for (Element src : media) {
-            if (src.tagName().equals("img")){
-            	int width = 100, height = 100;
-            	try{
-            		width = Integer.parseInt(src.attr("width"));
-            		height= Integer.parseInt(src.attr("height"));
-            	}catch(Exception e){
-            		e.printStackTrace();
-            	}
-            	Meme meme = new Meme(src.attr("abs:src"), src.attr("alt"), width, height);
-
-            	Log.v("Parser", "width: " + src.attr("width"));
-            	MemeStack.addMeme(meme);
-            }
-        }
+	public void parseHTML() throws IOException
+	{
+		//parseEngine.setBaseUrl(url);
+		parseEngine.parse();
     }
+	
 	@Override
 	protected String doInBackground(String... params) {
 		// TODO Auto-generated method stub
-		if (params!=null && params[0]!=null){
+		//if (params!=null && params[0]!=null){
 			try {
-				parseHTML(params[0]);
+				//parseHTML(params[0]);
+				parseHTML();
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		//}
 		return null;
 	}
 
 	@Override
-	protected void onPostExecute(String result) {
+	protected void onPostExecute(String result) 
+	{
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
 		

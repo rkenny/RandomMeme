@@ -78,7 +78,7 @@ public class MemeWebView extends WebView{
 		}
 		else
 		{
-			MemeStack.loadMoreMemes();
+			//MemeStack.loadMoreMemes();
 		}
 	}
 
