@@ -14,6 +14,7 @@ import android.util.Log;
 
 public class QuickMemeHtmlParseEngine extends AbstractHTMLParseEngine
 {
+	public static final String CLASS = "QuickMemeHtmlParseEngine";
 	public QuickMemeHtmlParseEngine()
 	{
 		this.setBaseUrl("http://quickmeme.com/random/?num=1");
@@ -21,21 +22,31 @@ public class QuickMemeHtmlParseEngine extends AbstractHTMLParseEngine
 	
 	public void parse() throws IOException
 	{
+		String TAG = CLASS + ".parse()";
 	   Document doc = Jsoup.connect(baseUrl).get();
        Elements media = doc.select("[src]");
        for (Element src : media) {
-           if (src.tagName().equals("img")){
-           	int width = 100, height = 100;
-           	try{
-           		width = Integer.parseInt(src.attr("width"));
-           		height= Integer.parseInt(src.attr("height"));
-           	}catch(Exception e){
-           		e.printStackTrace();
-           	}
-           	Meme meme = new Meme(src.attr("abs:src"), src.attr("alt"), width, height);
-
-           	Log.v("Parser", "width: " + src.attr("width"));
-           	MemeStack.addMeme(meme);
+           if (src.tagName().equals("img"))
+           {
+        	   if(src.attr("abs:src").contains("qkme.me"))
+        	   {
+		           	int width = 100, height = 100;
+		           	String URL = "";
+		           	try
+		           	{
+		           		width = Integer.parseInt(src.attr("width"));
+		           		height= Integer.parseInt(src.attr("height"));
+		           		URL = src.attr("src");
+		           	}
+		           	catch(Exception e)
+		           	{
+		           		e.printStackTrace();
+		           	}
+		           	Meme meme = new Meme(src.attr("abs:src"), src.attr("alt"), width, height);
+		           	
+		           	Log.v(TAG, "image: [" + src.attr("abs:src") + "]");
+		           	MemeStack.addMeme(meme);
+        	   }
            }
        }
 	}

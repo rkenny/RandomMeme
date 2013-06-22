@@ -3,6 +3,7 @@ package com.jamtwo.randommeme;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -46,19 +47,46 @@ public class MemeWebView extends WebView{
 	
 	private void createHTML(String url){
 		Display display = ((Activity) getContext()).getWindowManager().getDefaultDisplay();
-		int width = display.getWidth();
-		int height = display.getHeight();
+		// They display better this way for some reason
+		int height = display.getWidth();
+		int width = display.getHeight();
 		
 		String formatted_html = "<!DOCTYPE html>"+
 				"<html>"+
 				"<head></head>"+
 				"<body style='background-color: black;'>"+
-				"<div style='width: "+width+"px; height: "+height+"px; display: block; margin-left: 15%; margin-right: 15%; border-style: solid; border-color: yellow; border-width: 3px; '>"+
-				"<img src=" + url + " width=" + width + " height="+height+"/>"+
+				"<div style='position: absolute; width: "+width+"px; height: "+height+"px; display: block; margin-left: 5%; margin-right: 5%; border-style: solid; border-color: yellow; border-width: 3px; top: 45%; '>"+
+				"<img stype='position: relative;' src=" + url + " width=" + width + " height="+height+"/>"+
 				"</div>"+
 				"</body>"+
 				"</html>";
 				
+		loadData(formatted_html, "text/html", "UTF-8");
+	}
+	
+	private void createHTML2(byte[] jpegData){
+		Display display = ((Activity) getContext()).getWindowManager().getDefaultDisplay();
+		// They display better this way for some reason
+		int height = display.getWidth();
+		int width = display.getHeight();
+		String formatted_html;
+		if(jpegData != null)
+		{
+		
+			formatted_html = "<!DOCTYPE html>"+
+					"<html>"+
+					"<head></head>"+
+					"<body style='background-color: black;'>"+
+					"<div style='position: absolute; width: "+width+"px; height: "+height+"px; display: block; margin-left: 5%; margin-right: 5%; border-style: solid; border-color: yellow; border-width: 3px; top: 45%; '>"+
+					"<img stype='position: relative;' src='data:image/jpeg;base64," + Base64.encodeToString(jpegData, Base64.DEFAULT) + "' width=" + width + " height="+height+"/>"+
+					"</div>"+
+					"</body>"+
+					"</html>";
+		}
+		else
+		{
+			formatted_html = "";
+		}
 		loadData(formatted_html, "text/html", "UTF-8");
 	}
 	
@@ -70,15 +98,24 @@ public class MemeWebView extends WebView{
 		{
 			return;
 		}
-		if (MemeStack.hasNextMeme()){
-			String url = MemeStack.getNextMeme().getUrl();
-			createHTML(url);
+		if (MemeStack.hasNextMeme())
+		{
+			//String url = MemeStack.getNextMeme().getUrl();
+			byte[] jpegData = MemeStack.getNextMeme().getJpegData();
+			if(jpegData != null)
+			{
+				createHTML2(jpegData);
+			}
+			else
+			{
+				Log.w("MemeWebView", "jpegdata null");
+			}
+			//createHTML(url);
 			updateTvTitle();
-			
 		}
 		else
 		{
-			//MemeStack.loadMoreMemes();
+			MemeStack.loadMoreMemes();
 		}
 	}
 
