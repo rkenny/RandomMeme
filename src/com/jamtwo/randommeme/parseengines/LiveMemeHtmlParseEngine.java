@@ -14,6 +14,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.jamtwo.randommeme.Meme;
+import com.jamtwo.randommeme.MemeStack;
+
 import android.util.Log;
 
 public class LiveMemeHtmlParseEngine extends AbstractHTMLParseEngine 
@@ -32,17 +35,18 @@ public class LiveMemeHtmlParseEngine extends AbstractHTMLParseEngine
 	{
 		String TAG = CLASS + ".parse()";
 		Log.w(TAG, "starting");
-		int seed = 1+ randomGenerator.nextInt(100); //2000 is just pulled out of the air
-		String newUrl = "http://j"+seed+".livememe.com/3113_r"+seed; // pulled out of livememe's js
+		//int seed = 1+ randomGenerator.nextInt(100); //2000 is just pulled out of the air
+		int seed = 1;
+		int numberOfMemesToPull = 10;
+		String newUrl = "http://j"+seed+".livememe.com/3113_r"+numberOfMemesToPull; // pulled out of livememe's js
 		this.setBaseUrl(newUrl);
 		Log.w(TAG, "Pulling JSON from " + baseUrl);
 		
 		HttpClient httpclient = new DefaultHttpClient();
-		
-		
 		HttpGet httpget = new HttpGet(baseUrl);
 		HttpResponse response = httpclient.execute(httpget);
 		HttpEntity entity = response.getEntity();
+		
 		String line, html = "";
 		if (entity != null) 
 		{
@@ -69,36 +73,21 @@ public class LiveMemeHtmlParseEngine extends AbstractHTMLParseEngine
 		{
 			JSONObject overallObject = new JSONObject(html);
 			JSONObject t0 = overallObject.getJSONObject("t0");
+			String jpegUrl = "http://t1.livememe.com/" + t0.get("id") + ".jpg";
+			String memeType = t0.getString("name");
+			int width = t0.getInt("t_w");
+			int height = t0.getInt("t_h");
+			Log.w(TAG, "downloading jpg: " + jpegUrl);
 			
+			Meme meme = new Meme(jpegUrl, memeType, width, height);
+           	MemeStack.addMeme(meme);
 		} 
 		catch (JSONException e) 
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-//		Elements media = doc.select("[src]");
-//		Log.w(TAG, "There are ["+media.size()+"] elemenets in media.");
-//		for (Element src : media) 
-//		{
-//			if (src.tagName().equals("img"))
-//			{
-//				int width = 100, height = 100;
-//				try
-//	           	{
-//	           		width = Integer.parseInt(src.attr("width"));
-//	           		height= Integer.parseInt(src.attr("height"));
-//	           	}
-//	           	catch(Exception e)
-//	           	{
-//	           		e.printStackTrace();
-//	           	}
-//	           	Meme meme = new Meme(src.attr("abs:src"), src.attr("alt"), width, height);
-//	
-//	           	Log.v("Parser", "width: " + src.attr("width"));
-//	           	MemeStack.addMeme(meme);
-//			}
-//		}
+
 	}
 
 }

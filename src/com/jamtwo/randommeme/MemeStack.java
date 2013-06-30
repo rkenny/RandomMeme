@@ -28,79 +28,123 @@ public class MemeStack {
 		return mStack;
 	}
 	
-	public static Meme getNextMeme(){
-		String TAG = CLASS + ".getNextMeme";
+	public static Meme getNextMeme()
+	{
+		String TAG = CLASS + ".getNextMeme()";
+		Meme returnMeme;
 		
-		Log.v(TAG, "previous mCurrentIndex: " + mCurrentIndex);
-		if (mMemes.size()>0 && mCurrentIndex<mMemes.size())
+		//int memeSize = mMemes.size();
+		if(mMemes.size() == 0)
 		{
-//			if (mCurrentIndex+1 == mMemes.size()-RELOAD_INDEX)
-//			{ //Load more memes
-//				Log.v(TAG, "Loading more memes");
-//				loadMoreMemesListener.loadMoreMemes();
-//			}
-			mCurrentIndex++;
+			return null; // does not need to do anything
+		}
+		returnMeme = mMemes.get(mCurrentIndex);
+		Log.w(TAG, "Returning meme " + mCurrentIndex);
+		
+		mCurrentIndex++;
+		
+		return returnMeme;
+	}
+	
+	public static boolean nextMemeIsReady()
+	{
+		String TAG = CLASS + ".nextMemeIsReady()";
+		Log.v(TAG, "checking");
+		
+		if(MemeStack.hasNextMeme() && getMemeAtIndex(mCurrentIndex).readyToDisplay())
+		{
+			return true;
 		}
 		else
 		{
-			mCurrentIndex=0;
-			return null;
+			return false;
 		}
-		
-		Log.v(TAG, "returning mCurrentIndex: " + mCurrentIndex);
-		return mCurrentIndex > 0 ? mMemes.get(mCurrentIndex) : null;
+	}
+	
+	public static Meme getMemeAtIndex(int index)
+	{
+		return mMemes.get(index);
 	}
 	
 	public static boolean hasNextMeme()
 	{
 		String TAG = CLASS + ".hasNextMeme";
 		Log.v(TAG, "called");
+
+		return(mMemes.size() > 0 && (mCurrentIndex+1 <= mMemes.size()));
+	}
+	
+	public static void downloadAnotherMeme()
+	{
+		String TAG = CLASS + ".downloadAnotherMeme";
+		Log.v(TAG, "called");
 		
-		return (mMemes.size()>0 && mCurrentIndex<mMemes.size() && !(mCurrentIndex+1 == mMemes.size()-RELOAD_INDEX));	
+		loadMoreMemesListener.downloadAnotherMeme();
 	}
 	
 	public static void loadMoreMemes()
 	{
 		String TAG = CLASS + ".loadMoreMemes";
-		Log.v(TAG, "called");
+		Log.v(TAG, "SHOULD NOT BE called");
 		
 		loadMoreMemesListener.loadMoreMemes();
 	}
 	
 	public static Meme getPrevMeme(){
 		String TAG = CLASS + ".getPrevMeme";
+		Meme returnMeme;
 
-		Log.v(TAG, "previous mCurrentIndex: " + mCurrentIndex);
-
-		if (mMemes.size()>0 && mCurrentIndex>0)
+		if (mMemes.size() > 0 && mCurrentIndex > 0)
 		{
 			mCurrentIndex--;
 			
-		} else{
+		} else
+		{
 			mCurrentIndex=0;			
 		}
 		Log.v(TAG, "returning mCurrentIndex: " + mCurrentIndex);
-
-		return mMemes.get(mCurrentIndex);
+		returnMeme = mMemes.get(mCurrentIndex);
+		
+		return returnMeme;
 	}
 	
-	public static void addMeme(Meme meme){
+	public static void addMeme(Meme meme)
+	{
+		String TAG = CLASS + ".addMeme()";
+		Log.w(TAG, "adding Meme["+mMemes.size()+"]: " + meme.getUrl());
+		meme.setStackPosition(mMemes.size());
 		mMemes.add(meme);
 	}
 	
-	public static Meme getCurrentMeme(){
+	public static void removeMeme(Meme meme)
+	{
+		mMemes.remove(meme);
+		mCurrentIndex--;
+	}
+	
+	public static Meme getCurrentMeme()
+	{
 		String TAG = CLASS + ".getCurrentMeme";
 
-		if (mMemes.size()>(mCurrentIndex)){
+		if (mMemes.size()>(mCurrentIndex))
+		{
 			Log.v(TAG, "returning mCurrentIndex: " + mCurrentIndex);
 			return mMemes.get(mCurrentIndex);
 		}
+		Log.v(TAG, "no meme to return");
 		return null;
 	}
 	
-	public void registerLoadMoreMemesListener(ILoadMoreMemesListener listener){
+	public void registerLoadMoreMemesListener(ILoadMoreMemesListener listener)
+	{
 		loadMoreMemesListener = listener;
 	}
 	
+	public static void updateWebView()
+	{
+		String TAG = CLASS + ".updateWebView()";
+		Log.w(TAG, "DO NOT CALL updating web view");
+		loadMoreMemesListener.updateWebView();
+	}
 
 }

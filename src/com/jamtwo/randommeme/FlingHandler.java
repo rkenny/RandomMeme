@@ -29,10 +29,10 @@ public class FlingHandler implements OnGestureListener
 		
 		if (event1.getRawX() > event2.getRawX() && StrictMath.abs(event1.getRawY()-event2.getRawY())<100) {
 			Log.v(TAG, "Loading next meme");
-			mMemeWebView.loadNextMeme();
+			//mMemeWebView.loadNextMeme();
          } else if(event1.getRawX() < event2.getRawX() && StrictMath.abs(event1.getRawY()-event2.getRawY())<100){
         	 Log.v(TAG, "Loading previous meme");
-        	 mMemeWebView.loadPrevMeme();
+        	// mMemeWebView.loadPrevMeme();
          } else {
 
          }
