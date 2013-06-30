@@ -50,7 +50,8 @@ public class MemeStack {
 	{
 		String TAG = CLASS + ".nextMemeIsReady()";
 		Log.v(TAG, "checking");
-		
+		Log.v(TAG, "hasNextMeme is ready? " + MemeStack.hasNextMeme());
+		Log.v(TAG, "memeAtIndex("+mCurrentIndex+").isReadyToDisplay()? " + getMemeAtIndex(mCurrentIndex).readyToDisplay());
 		if(MemeStack.hasNextMeme() && getMemeAtIndex(mCurrentIndex).readyToDisplay())
 		{
 			return true;

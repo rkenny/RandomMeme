@@ -113,8 +113,9 @@ public class MemeWebView extends WebView{
 		Log.w(TAG, "displaying a meme - " + meme.getTitle() +" --["+meme.getUrl()+"]");
 		byte[] jpegData = meme.getJpegData();
 		String formatted_html = createHTML2(jpegData);
-		loadData(formatted_html, "text/html", "UTF-8");
-		reload();
+		//loadData(formatted_html, "text/html", "UTF-8");
+		//reload();
+		loadDataWithBaseURL("javascript:window.location.reload( true )", formatted_html, "text/html", "UTF-8", "");
 	}
 
 	
