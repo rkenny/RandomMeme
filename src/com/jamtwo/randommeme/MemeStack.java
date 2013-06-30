@@ -61,6 +61,18 @@ public class MemeStack {
 		}
 	}
 	
+	public static boolean prevMemeIsReady()
+	{
+		if(MemeStack.hasPrevMeme() && getMemeAtIndex(mCurrentIndex - 1).readyToDisplay())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 	public static Meme getMemeAtIndex(int index)
 	{
 		return mMemes.get(index);
@@ -72,6 +84,21 @@ public class MemeStack {
 		Log.v(TAG, "called");
 
 		return(mMemes.size() > 0 && (mCurrentIndex+1 <= mMemes.size()));
+	}
+	
+	public static boolean atLastMeme()
+	{
+		String TAG = CLASS + ".atLastMeme()";
+		Log.d(TAG, "is " + (mCurrentIndex == mMemes.size()));
+		return(mCurrentIndex == mMemes.size());
+	}
+	
+	public static boolean hasPrevMeme()
+	{
+		String TAG = CLASS + ".hasPrevMeme";
+		Log.v(TAG, "called");
+
+		return(mMemes.size() > 0 && (mCurrentIndex-1 >= 0));
 	}
 	
 	public static void downloadAnotherMeme()

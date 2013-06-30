@@ -74,7 +74,7 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 			displayNextMeme();
 			break;
 		case R.id.prevButton:
-			//displayPrevMeme();
+			displayPrevMeme();
 			break;
 		}
 		
@@ -112,7 +112,11 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
     		mWebView.display(meme);
     		updateTvTitle(meme.getTitle());
     		mWebView.invalidate();
-    		downloadAnotherMeme();
+    		if(MemeStack.atLastMeme())
+    		{
+    			downloadAnotherMeme();
+    		}
+    		
     	}
     	else
     	{
@@ -121,9 +125,21 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
     }
     
     
-    public void loadPrevMeme()
+    public void displayPrevMeme()
     {
-    	
+    	if(MemeStack.prevMemeIsReady())
+    	{
+    		Meme meme = MemeStack.getPrevMeme();
+    		
+    		mWebView.display(meme);
+    		updateTvTitle(meme.getTitle());
+    		mWebView.invalidate();
+    		//downloadAnotherMeme();
+    	}
+    	else
+    	{
+    		Toast.makeText(this, "There are no previous memes", Toast.LENGTH_LONG);
+    	}
     }
     
     public void updateTvTitle(String currentMemeTitle)
