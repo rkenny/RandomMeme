@@ -44,7 +44,7 @@ public class MemeWebView extends WebView{
 	
 	 public boolean onTouchEvent(MotionEvent event) {
 		 String TAG = CLASS + ".onTouchEvent()";
-		 Log.w(TAG, "Handling touchEvent");
+		 //Log.w(TAG, "Handling touchEvent");
          return (flingHandler.onTouchEvent(event) || super.onTouchEvent(event));
      };
 	
@@ -57,7 +57,7 @@ public class MemeWebView extends WebView{
 		int height = display.getWidth();
 		int width = display.getHeight();
 		String formatted_html;
-		Log.d(TAG, "JPEG md5: " + md5Java(new String(jpegData)));
+		//Log.d(TAG, "JPEG md5: " + md5Java(new String(jpegData)));
 		
 		if(jpegData != null)
 		{
@@ -76,7 +76,7 @@ public class MemeWebView extends WebView{
 		}
 		else
 		{
-			Log.w(TAG, "the jpeg was null");
+			//Log.w(TAG, "the jpeg was null");
 			formatted_html = "";
 		}
 		
@@ -110,7 +110,7 @@ public class MemeWebView extends WebView{
 	public void display(Meme meme)
 	{
 		String TAG = CLASS + ".display()";
-		Log.w(TAG, "displaying a meme - " + meme.getTitle() +" --["+meme.getUrl()+"]");
+		//Log.w(TAG, "displaying a meme - " + meme.getTitle() +" --["+meme.getUrl()+"]");
 		byte[] jpegData = meme.getJpegData();
 		String formatted_html = createHTML2(jpegData);
 		//loadData(formatted_html, "text/html", "UTF-8");

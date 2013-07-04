@@ -8,16 +8,21 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
 
 public class HTTPGetJpegAsyncTask extends AsyncTask<Void, Void, byte[]> 
 {
 	AsyncResponse delegate;
+	Context context;
 	URL url;
 	
-	public HTTPGetJpegAsyncTask(AsyncResponse delegate, String url)
+	public HTTPGetJpegAsyncTask(AsyncResponse delegate, Context context, String url)
 	{
 		this.delegate = delegate;
+		this.context = context;
 		try 
 		{
 			this.url = new URL(url);
@@ -77,6 +82,8 @@ public class HTTPGetJpegAsyncTask extends AsyncTask<Void, Void, byte[]>
 	protected void onPostExecute(byte[] result) {
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
+		Log.v("HTTPGetJpegAsyncTask", "I have another meme to show you!");
+		//Toast.makeText(context, "I have another meme to show you!", Toast.LENGTH_SHORT).show();
 		delegate.returnJpeg(result);
 	}
 

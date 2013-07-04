@@ -53,7 +53,8 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
         mWebView.getSettings().setBuiltInZoomControls(false);
         
         flingHandler = new GestureDetector(this, new FlingHandler(mWebView));
-        loadMoreMemes();
+        //loadMoreMemes();
+        downloadMoreMemes(5);
         //mWebView.loadNextMeme();
         
     }
@@ -71,6 +72,7 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 	public void onClick(View v) {
 		switch(v.getId()){
 		case R.id.nextButton:
+			//Log.w("MainActivity", "nextButton clicked");
 			displayNextMeme();
 			break;
 		case R.id.prevButton:
@@ -83,7 +85,7 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 	public void loadMoreMemes(){
 		String TAG = CLASS + ".loadMoreMemes";
 		
-		Log.v(TAG, "loading more memes");
+		//Log.v(TAG, "loading more memes");
 		mPageIndex++;
 		if (mPageIndex > mPageIndexMax){
 			mPageIndex=0;
@@ -91,36 +93,42 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 		
     	HTMLParserAsyncTask parser = new HTMLParserAsyncTask(this, mWebView);
     	//parser.parseEngine = new QuickMemeHtmlParseEngine(); //strategy!
-    	parser.parseEngine = new LiveMemeHtmlParseEngine();
+    	parser.parseEngine = new LiveMemeHtmlParseEngine(this);
     	parser.execute();
 	}
 
-	//called when the async'ly downloaded jpeg is ready
-    public void updateWebView()
-    {
-    	String TAG = CLASS + ".updateWebView()";
-		Log.w(TAG, "updating web view");
+	//called when the async'ly downloaded jpeg is ready - this is handled throught the meme
+    //public void updateWebView()
+    //{
+    //	String TAG = CLASS + ".updateWebView()";
+		//Log.w(TAG, "updating web view");
     	//mWebView.updateWebView();
-    }
+    //}
     
     public void displayNextMeme()
     {
+    	String TAG = CLASS + ".displayNextMeme()";
+    	//Log.w(TAG, "is next meme ready?");
+    	if(MemeStack.nMemesFromLast(3) == true)
+    	{
+			//Log.w(TAG, "downloading 5 more memes because " + MemeStack.nMemesFromLast(3));
+			downloadMoreMemes(5);
+		}
+		
     	if(MemeStack.nextMemeIsReady())
     	{
+    		//Log.w(TAG, "Yes. Next meme is ready");
     		Meme meme = MemeStack.getNextMeme();
     		
     		mWebView.display(meme);
     		updateTvTitle(meme.getTitle());
     		mWebView.invalidate();
-    		if(MemeStack.atLastMeme())
-    		{
-    			downloadAnotherMeme();
-    		}
-    		
+    		//if(MemeStack.atLastMeme())
     	}
     	else
     	{
-    		Toast.makeText(this, "Getting more memes", Toast.LENGTH_LONG);
+    		//Log.w(TAG, "No. Next meme is not ready");
+    		Toast.makeText(this, "I'm getting more memes ready for you", Toast.LENGTH_SHORT).show();
     	}
     }
     
@@ -138,14 +146,14 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
     	}
     	else
     	{
-    		Toast.makeText(this, "There are no previous memes", Toast.LENGTH_LONG);
+    		Toast.makeText(this, "There are no more memes that way", Toast.LENGTH_LONG);
     	}
     }
     
     public void updateTvTitle(String currentMemeTitle)
     {
     	String TAG = CLASS + ".updateTvTitle()";
-    	Log.v(TAG, "updating with title" + currentMemeTitle);
+    	//Log.v(TAG, "updating with title" + currentMemeTitle);
 		TextView tvTitle;
 		tvTitle = (TextView) this.findViewById(R.id.tvTitle);
 		
@@ -175,15 +183,19 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
     }
 
 	@Override
-	public void downloadAnotherMeme() {
+	public void downloadMoreMemes(int count) {
 		
 		String TAG = CLASS + ".downloadAnotherMeme";
-		
-		Log.v(TAG, "loading more memes");
-    	HTMLParserAsyncTask parser = new HTMLParserAsyncTask(this, mWebView);
-    	//parser.parseEngine = new QuickMemeHtmlParseEngine(); //strategy!
-    	parser.parseEngine = new LiveMemeHtmlParseEngine();
-    	parser.execute();
+		while(count > 0)
+		{
+			HTMLParserAsyncTask parser = new HTMLParserAsyncTask(this, mWebView);
+	    	//parser.parseEngine = new QuickMemeHtmlParseEngine(); //strategy!
+	    	parser.parseEngine = new LiveMemeHtmlParseEngine(this);
+	    	parser.execute();
+	    	count--;
+		}
+		//Log.v(TAG, "loading more memes");
+    	
 		
 	}
     

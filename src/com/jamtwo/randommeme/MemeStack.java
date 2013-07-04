@@ -39,7 +39,7 @@ public class MemeStack {
 			return null; // does not need to do anything
 		}
 		returnMeme = mMemes.get(mCurrentIndex);
-		Log.w(TAG, "Returning meme " + mCurrentIndex);
+		//Log.w(TAG, "Returning meme " + mCurrentIndex);
 		
 		mCurrentIndex++;
 		
@@ -49,17 +49,22 @@ public class MemeStack {
 	public static boolean nextMemeIsReady()
 	{
 		String TAG = CLASS + ".nextMemeIsReady()";
-		Log.v(TAG, "checking");
-		Log.v(TAG, "hasNextMeme is ready? " + MemeStack.hasNextMeme());
-		Log.v(TAG, "memeAtIndex("+mCurrentIndex+").isReadyToDisplay()? " + getMemeAtIndex(mCurrentIndex).readyToDisplay());
-		if(MemeStack.hasNextMeme() && getMemeAtIndex(mCurrentIndex).readyToDisplay())
+		//Log.v(TAG, "checking if the next meme is ready [mCurrentIndex = " +mCurrentIndex+"]");
+		//Log.v(TAG, "hasNextMeme is ready? " + MemeStack.hasNextMeme());
+		//Log.v(TAG, "memeAtIndex("+mCurrentIndex+").isReadyToDisplay()? " + getMemeAtIndex(mCurrentIndex).readyToDisplay());
+		if(MemeStack.hasNextMeme())
 		{
-			return true;
+			if(getMemeAtIndex(mCurrentIndex).readyToDisplay())
+			{
+				//Log.v(TAG, "MemeStack has the next meme and it is ready");
+				return true;
+			}
 		}
-		else
-		{
-			return false;
-		}
+		//else
+		//{
+		//Log.v(TAG, "MemeStack does not have a next meme, or it is not ready.");
+		return false;
+		//}
 	}
 	
 	public static boolean prevMemeIsReady()
@@ -76,13 +81,15 @@ public class MemeStack {
 	
 	public static Meme getMemeAtIndex(int index)
 	{
+		String TAG = CLASS + "getMemeAtIndex()";
+		//Log.v(TAG, "callde iwth index: " + index);
 		return mMemes.get(index);
 	}
 	
 	public static boolean hasNextMeme()
 	{
 		String TAG = CLASS + ".hasNextMeme";
-		Log.v(TAG, "called");
+		//Log.v(TAG, "called");
 
 		return(mMemes.size() > 0 && (mCurrentIndex+1 <= mMemes.size()));
 	}
@@ -90,32 +97,38 @@ public class MemeStack {
 	public static boolean atLastMeme()
 	{
 		String TAG = CLASS + ".atLastMeme()";
-		Log.d(TAG, "is " + (mCurrentIndex == mMemes.size()));
+		//Log.d(TAG, "is " + (mCurrentIndex == mMemes.size()));
 		return(mCurrentIndex == mMemes.size());
+	}
+	
+	public static boolean nMemesFromLast(int n)
+	{
+		Log.v(".nMemesFromLast()", "RESULT: "+ (mMemes.size()-mCurrentIndex <= n));
+		return( (mMemes.size()-mCurrentIndex) <= n);
 	}
 	
 	public static boolean hasPrevMeme()
 	{
 		String TAG = CLASS + ".hasPrevMeme";
-		Log.v(TAG, "called");
+		//Log.v(TAG, "called");
 
 		return(mMemes.size() > 0 && (mCurrentIndex-1 >= 0));
 	}
 	
-	public static void downloadAnotherMeme()
+	public static void downloadMoreMemes(int count)
 	{
 		String TAG = CLASS + ".downloadAnotherMeme";
 		Log.v(TAG, "called");
 		
-		loadMoreMemesListener.downloadAnotherMeme();
+		loadMoreMemesListener.downloadMoreMemes(count);
 	}
 	
 	public static void loadMoreMemes()
 	{
 		String TAG = CLASS + ".loadMoreMemes";
-		Log.v(TAG, "SHOULD NOT BE called");
+		Log.v(TAG, "SHOULD NOT BE called - use one of the meme download engines");
 		
-		loadMoreMemesListener.loadMoreMemes();
+		//loadMoreMemesListener.loadMoreMemes();
 	}
 	
 	public static Meme getPrevMeme(){
@@ -130,7 +143,7 @@ public class MemeStack {
 		{
 			mCurrentIndex=0;			
 		}
-		Log.v(TAG, "returning mCurrentIndex: " + mCurrentIndex);
+		//Log.v(TAG, "returning mCurrentIndex: " + mCurrentIndex);
 		returnMeme = mMemes.get(mCurrentIndex);
 		
 		return returnMeme;
@@ -139,7 +152,7 @@ public class MemeStack {
 	public static void addMeme(Meme meme)
 	{
 		String TAG = CLASS + ".addMeme()";
-		Log.w(TAG, "adding Meme["+mMemes.size()+"]: " + meme.getUrl());
+		//Log.w(TAG, "adding Meme["+mMemes.size()+"]: " + meme.getUrl());
 		meme.setStackPosition(mMemes.size());
 		mMemes.add(meme);
 	}
@@ -156,10 +169,10 @@ public class MemeStack {
 
 		if (mMemes.size()>(mCurrentIndex))
 		{
-			Log.v(TAG, "returning mCurrentIndex: " + mCurrentIndex);
+			//Log.v(TAG, "returning mCurrentIndex: " + mCurrentIndex);
 			return mMemes.get(mCurrentIndex);
 		}
-		Log.v(TAG, "no meme to return");
+		//Log.v(TAG, "no meme to return");
 		return null;
 	}
 	
@@ -171,8 +184,8 @@ public class MemeStack {
 	public static void updateWebView()
 	{
 		String TAG = CLASS + ".updateWebView()";
-		Log.w(TAG, "DO NOT CALL updating web view");
-		loadMoreMemesListener.updateWebView();
+		Log.w(TAG, "DO NOT CALL updating web view - use the meme parser engines");
+		//loadMoreMemesListener.updateWebView();
 	}
 
 }

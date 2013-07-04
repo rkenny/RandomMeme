@@ -14,33 +14,34 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+
 import com.jamtwo.randommeme.Meme;
 import com.jamtwo.randommeme.MemeStack;
-
-import android.util.Log;
 
 public class LiveMemeHtmlParseEngine extends AbstractHTMLParseEngine 
 {
 	private static final String CLASS = LiveMemeHtmlParseEngine.class.getSimpleName();
 	Random randomGenerator = new Random();
 	
-	public LiveMemeHtmlParseEngine()
+	public LiveMemeHtmlParseEngine(Context context)
 	{
 		//http://j#.livememe.com/3113_r#
 		this.setBaseUrl("http://www.livememe.com/random");
+		this.setContext(context);
 	}
 	
 	@Override
 	public void parse() throws IOException 
 	{
 		String TAG = CLASS + ".parse()";
-		Log.w(TAG, "starting");
+		//Log.w(TAG, "starting");
 		//int seed = 1+ randomGenerator.nextInt(100); //2000 is just pulled out of the air
 		int seed = 1;
 		int numberOfMemesToPull = 10;
 		String newUrl = "http://j"+seed+".livememe.com/3113_r"+numberOfMemesToPull; // pulled out of livememe's js
 		this.setBaseUrl(newUrl);
-		Log.w(TAG, "Pulling JSON from " + baseUrl);
+		//Log.w(TAG, "Pulling JSON from " + baseUrl);
 		
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpGet httpget = new HttpGet(baseUrl);
@@ -68,7 +69,7 @@ public class LiveMemeHtmlParseEngine extends AbstractHTMLParseEngine
 		
 		html = html.substring(13, html.length()-2);
 		
-		Log.w(TAG, "HTML: " +html.substring(0, 20) + "..."+ html.substring(html.length()-50));
+		//Log.w(TAG, "HTML: " +html.substring(0, 20) + "..."+ html.substring(html.length()-50));
 		try 
 		{
 			JSONObject overallObject = new JSONObject(html);
@@ -77,9 +78,9 @@ public class LiveMemeHtmlParseEngine extends AbstractHTMLParseEngine
 			String memeType = t0.getString("name");
 			int width = t0.getInt("t_w");
 			int height = t0.getInt("t_h");
-			Log.w(TAG, "downloading jpg: " + jpegUrl);
+			//Log.w(TAG, "downloading jpg: " + jpegUrl);
 			
-			Meme meme = new Meme(jpegUrl, memeType, width, height);
+			Meme meme = new Meme(getContext(), jpegUrl, memeType, width, height);
            	MemeStack.addMeme(meme);
 		} 
 		catch (JSONException e) 

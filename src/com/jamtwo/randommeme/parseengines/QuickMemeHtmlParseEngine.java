@@ -7,17 +7,19 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.jamtwo.randommeme.Meme;
 import com.jamtwo.randommeme.MemeStack;
-
-import android.util.Log;
 
 public class QuickMemeHtmlParseEngine extends AbstractHTMLParseEngine
 {
 	public static final String CLASS = "QuickMemeHtmlParseEngine";
-	public QuickMemeHtmlParseEngine()
+	public QuickMemeHtmlParseEngine(Context context)
 	{
 		this.setBaseUrl("http://quickmeme.com/random/?num=1");
+		this.setContext(context);
 	}
 	
 	public void parse() throws IOException
@@ -42,7 +44,7 @@ public class QuickMemeHtmlParseEngine extends AbstractHTMLParseEngine
 		           	{
 		           		e.printStackTrace();
 		           	}
-		           	Meme meme = new Meme(src.attr("abs:src"), src.attr("alt"), width, height);
+		           	Meme meme = new Meme(getContext(), src.attr("abs:src"), src.attr("alt"), width, height);
 		           	
 		           	Log.v(TAG, "image: [" + src.attr("abs:src") + "]");
 		           	MemeStack.addMeme(meme);

@@ -1,12 +1,9 @@
 package com.jamtwo.randommeme;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import android.content.Context;
 
 import com.jamtwo.randommeme.asynctasks.AsyncResponse;
 import com.jamtwo.randommeme.asynctasks.HTTPGetJpegAsyncTask;
-
-import android.util.Log;
 
 public class Meme implements AsyncResponse {
 	public static final String CLASS = "Meme";
@@ -16,6 +13,7 @@ public class Meme implements AsyncResponse {
 	private String url;
 	private byte[] jpegData; // the meme's jpg as a base64-encoded string
 	private int stackPosition;
+	private Context context;
 	
 	public void setStackPosition(int stackPosition)
 	{
@@ -32,19 +30,20 @@ public class Meme implements AsyncResponse {
 		MemeStack.removeMeme(this);
 	}
 	
-	public Meme(String url, String title, int width, int height){
-		this(url);
+	public Meme(Context context, String url, String title, int width, int height){
+		this(context, url);
 		this.title = title;
 		this.width = width;
 		this.height = height;
 		
 	}
 	
-	public Meme(String url)
+	public Meme(Context context, String url)
 	{
 		String TAG = CLASS + "()";
-		Log.w(TAG, "Constructed from " + url);
+		//Log.w(TAG, "Constructed from " + url);
 		this.url=url;
+		this.context = context;
 		setJpegData(url);
 	}
 	
@@ -56,7 +55,7 @@ public class Meme implements AsyncResponse {
 	
 	public void setJpegData(String url)
 	{
-		HTTPGetJpegAsyncTask getJpeg = new HTTPGetJpegAsyncTask(this, url);
+		HTTPGetJpegAsyncTask getJpeg = new HTTPGetJpegAsyncTask(this, context, url);
 		getJpeg.execute();
 		
 	}
@@ -65,12 +64,12 @@ public class Meme implements AsyncResponse {
 	public void returnJpeg(byte[] jpegData) 
 	{
 		this.jpegData = jpegData; 
-		Log.w("Meme", "jpegData transfer complete for meme " + title + "[" +url+ "]");
+		//Log.w("Meme", "jpegData transfer complete for meme " + title + "[" +url+ "]");
 	}
 	
 	public boolean readyToDisplay()
 	{
-		Log.w("Meme.readyToDisplay", "Ready to display? " + ((jpegData != null) && (jpegData.length > 0)));
+		//Log.w("Meme.readyToDisplay", "Ready to display? " + ((jpegData != null) && (jpegData.length > 0)));
 		return((jpegData != null) && (jpegData.length > 0));
 	}
 	
