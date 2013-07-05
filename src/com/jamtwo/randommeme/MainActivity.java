@@ -2,15 +2,14 @@ package com.jamtwo.randommeme;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,10 +52,7 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
         mWebView.getSettings().setBuiltInZoomControls(false);
         
         flingHandler = new GestureDetector(this, new FlingHandler(mWebView));
-        //loadMoreMemes();
         downloadMoreMemes(5);
-        //mWebView.loadNextMeme();
-        
     }
 
     
@@ -80,6 +76,33 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 			break;
 		}
 		
+	}
+	
+	private boolean networkConnectionIsAvailable() 
+	{
+	    boolean wifiIsConnected = false;
+	    boolean mobileIsConnected = false;
+
+	    ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+	    for (NetworkInfo ni : netInfo) 
+	    {
+	        if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+	        {
+	            if (ni.isConnected())
+	            {
+	            	wifiIsConnected = true;
+	            }
+	        }
+	        if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+	        {
+	            if (ni.isConnected())
+	            {
+	            	mobileIsConnected = true;
+	            }
+	        }
+	    }
+	    return wifiIsConnected || mobileIsConnected;
 	}
 	
 	public void loadMoreMemes(){
@@ -128,7 +151,10 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
     	else
     	{
     		//Log.w(TAG, "No. Next meme is not ready");
-    		Toast.makeText(this, "I'm getting more memes ready for you", Toast.LENGTH_SHORT).show();
+    	//	if(networkConnectionIsAvailable())
+    	//	{
+    	//		Toast.makeText(this, "I'm getting more memes ready for you", Toast.LENGTH_SHORT).show();
+    	//	}
     	}
     }
     
@@ -161,7 +187,7 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 		
 		if(currentMemeTitle == null)
 		{
-			currentMemeTitle = "Loading...";
+			currentMemeTitle = "Tap next!";
 		}
 		//22 chars?
 		if(currentMemeTitle.length() < 22)
@@ -186,16 +212,23 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 	public void downloadMoreMemes(int count) {
 		
 		String TAG = CLASS + ".downloadAnotherMeme";
-		while(count > 0)
+		if(networkConnectionIsAvailable())
 		{
-			HTMLParserAsyncTask parser = new HTMLParserAsyncTask(this, mWebView);
-	    	//parser.parseEngine = new QuickMemeHtmlParseEngine(); //strategy!
-	    	parser.parseEngine = new LiveMemeHtmlParseEngine(this);
-	    	parser.execute();
-	    	count--;
+			Toast.makeText(this, "I'm getting more memes ready for you", Toast.LENGTH_SHORT).show();
+			
+			while(count > 0)
+			{
+				HTMLParserAsyncTask parser = new HTMLParserAsyncTask(this, mWebView);
+		    	//parser.parseEngine = new QuickMemeHtmlParseEngine(); //strategy!
+		    	parser.parseEngine = new LiveMemeHtmlParseEngine(this);
+		    	parser.execute();
+		    	count--;
+			}
 		}
-		//Log.v(TAG, "loading more memes");
-    	
+		else
+		{
+			Toast.makeText(this, "You're not connected to the Internet!", Toast.LENGTH_SHORT).show();
+		}
 		
 	}
     

@@ -39,7 +39,9 @@ public class MemeWebView extends WebView{
 		if(!this.isInEditMode())
 		{
 			flingHandler = new GestureDetector(context, new FlingHandler(this));
-		}	
+		}
+		//loadDataWithBaseURL("javascript:window.location.reload( true )", "<html><head></head><body><img src='file:///android_asset/html_no_copy/demo_welcome.html'/></body></html>", "text/html", "UTF-8", "");
+
 	}
 	
 	 public boolean onTouchEvent(MotionEvent event) {
@@ -69,7 +71,7 @@ public class MemeWebView extends WebView{
 					//"<div style='position: absolute; width: "+width+"px; height: "+height+"px; display: block; margin-left: 5%; margin-right: 5%; border-style: solid; border-color: yellow; border-width: 3px; top: 45%; '>"+
 					"<div >"+
 					//"<img style='position: absolute; margin-left: auto; margin-right: auto; top: 30&#37;' src='data:image/jpeg;base64," + Base64.encodeToString(jpegData, Base64.DEFAULT) + "' width=" + width + " height="+height+"/>"+
-					"<img style='width: 100%; height: auto' src='data:image/jpeg;base64," + Base64.encodeToString(jpegData, Base64.DEFAULT) + "' />"+
+					"<img style='max-width: 99%; max-height: 99%; width: 100%; height: auto;' src='data:image/jpeg;base64," + Base64.encodeToString(jpegData, Base64.DEFAULT) + "' />"+
 					"</div>"+
 					"</body>"+
 					"</html>";
@@ -77,7 +79,17 @@ public class MemeWebView extends WebView{
 		else
 		{
 			//Log.w(TAG, "the jpeg was null");
-			formatted_html = "";
+			formatted_html = "<!DOCTYPE html>"+
+					"<html>"+
+					"<head></head>"+
+					"<body style='background-color: black;'>"+
+					//"<div style='position: absolute; width: "+width+"px; height: "+height+"px; display: block; margin-left: 5%; margin-right: 5%; border-style: solid; border-color: yellow; border-width: 3px; top: 45%; '>"+
+					"<div >"+
+					//"<img style='position: absolute; margin-left: auto; margin-right: auto; top: 30&#37;' src='data:image/jpeg;base64," + Base64.encodeToString(jpegData, Base64.DEFAULT) + "' width=" + width + " height="+height+"/>"+
+					"<span>memes and memes and memes and memes</span>"+
+					"</div>"+
+					"</body>"+
+					"</html>";
 		}
 		
 		return formatted_html;

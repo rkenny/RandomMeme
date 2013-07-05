@@ -36,8 +36,8 @@ public class LiveMemeHtmlParseEngine extends AbstractHTMLParseEngine
 	{
 		String TAG = CLASS + ".parse()";
 		//Log.w(TAG, "starting");
-		//int seed = 1+ randomGenerator.nextInt(100); //2000 is just pulled out of the air
-		int seed = 1;
+		int seed = 1+ randomGenerator.nextInt(100); //2000 is just pulled out of the air
+		//int seed = 1;
 		int numberOfMemesToPull = 10;
 		String newUrl = "http://j"+seed+".livememe.com/3113_r"+numberOfMemesToPull; // pulled out of livememe's js
 		this.setBaseUrl(newUrl);
