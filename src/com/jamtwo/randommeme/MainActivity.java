@@ -1,10 +1,20 @@
 package com.jamtwo.randommeme;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -42,6 +52,9 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
         ImageButton prevButton = (ImageButton) findViewById(R.id.prevButton);
         prevButton.setOnClickListener((OnClickListener) this);
 
+        ImageButton shareButton = (ImageButton) findViewById(R.id.shareButton);
+        shareButton.setOnClickListener((OnClickListener) this);
+        
         mWebView = (MemeWebView)findViewById(R.id.memeView);
         mWebView.getSettings().setJavaScriptEnabled(true); //
         
@@ -74,10 +87,80 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 		case R.id.prevButton:
 			displayPrevMeme();
 			break;
+		case R.id.shareButton:
+			shareCurrentMeme();
+			break;
 		}
+		
 		
 	}
 	
+	private void shareCurrentMeme() 
+	{
+		String memeJpegUri = saveMemeAsJpeg(MemeStack.getCurrentMeme());
+		
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_SEND);
+		sendIntent.setType("image/jpeg");
+		sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(memeJpegUri));
+
+		startActivity(sendIntent);
+		
+	}
+	
+	private String saveMemeAsJpeg(Meme meme)
+	{
+		File memeJpeg = null;
+		File root = null;
+		byte[] jpegData = meme.getJpegData();
+		
+		String state = Environment.getExternalStorageState();
+
+		if (Environment.MEDIA_MOUNTED.equals(state))
+		{
+			root = Environment.getExternalStorageDirectory();
+		} else 
+		{
+			root = getFilesDir();
+		}
+	    
+		if(root == null)
+		{
+			//how is this even possible?
+			Toast.makeText(this, "I can't find a writable directory!", Toast.LENGTH_SHORT);
+			return "invalid";
+		}
+		
+	    if (root.canWrite())
+	    {
+	    	memeJpeg = new File(root, "meme.jpg");
+	        FileOutputStream memeJpegWriter;
+			try 
+			{
+				memeJpegWriter = new FileOutputStream(memeJpeg);
+				BufferedOutputStream out = new BufferedOutputStream(memeJpegWriter);
+			    out.write(jpegData);
+			    Log.w("MainActivity.shareCurrentMeme()", "1st:"+ memeJpeg.getAbsolutePath());
+			    out.close();
+			}
+			catch (FileNotFoundException e)
+			{
+				e.printStackTrace();
+				Toast.makeText(this, "Something went wrong sending this meme", Toast.LENGTH_SHORT);
+				return "invalid";
+			} 
+			catch (IOException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				Toast.makeText(this, "Something went wrong sending this meme", Toast.LENGTH_SHORT);
+				return "invalid";
+			}
+	    }
+	    
+	    return "file:///" +  memeJpeg.getAbsolutePath();
+	}
+
 	private boolean networkConnectionIsAvailable() 
 	{
 	    boolean wifiIsConnected = false;
@@ -161,6 +244,9 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
     
     public void displayPrevMeme()
     {
+    	String TAG = CLASS + ".displayPrevMeme()";
+    	
+    	Log.w(TAG, "called");
     	if(MemeStack.prevMemeIsReady())
     	{
     		Meme meme = MemeStack.getPrevMeme();

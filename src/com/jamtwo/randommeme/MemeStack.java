@@ -38,11 +38,8 @@ public class MemeStack {
 		{
 			return null; // does not need to do anything
 		}
-		returnMeme = mMemes.get(mCurrentIndex);
-		//Log.w(TAG, "Returning meme " + mCurrentIndex);
-		
 		mCurrentIndex++;
-		
+		returnMeme = mMemes.get(mCurrentIndex);
 		return returnMeme;
 	}
 	
@@ -134,16 +131,14 @@ public class MemeStack {
 	public static Meme getPrevMeme(){
 		String TAG = CLASS + ".getPrevMeme";
 		Meme returnMeme;
-
 		if (mMemes.size() > 0 && mCurrentIndex > 0)
 		{
 			mCurrentIndex--;
 			
 		} else
 		{
-			mCurrentIndex=0;			
+			mCurrentIndex=mMemes.size()-1;			
 		}
-		//Log.v(TAG, "returning mCurrentIndex: " + mCurrentIndex);
 		returnMeme = mMemes.get(mCurrentIndex);
 		
 		return returnMeme;

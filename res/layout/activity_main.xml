@@ -8,14 +8,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:context=".MainActivity" >
-
-    <com.jamtwo.randommeme.MemeWebView
-        android:id="@+id/memeView"
-        android:layout_width="match_parent"
-        android:layout_height="300dip"
-        android:layout_above="@+id/nextButton"
-        android:layout_below="@+id/fb_likebutton"
-        android:padding="0dp" />
     
     <ImageButton
         android:id="@+id/nextButton"
@@ -38,7 +30,7 @@
 		android:background="@null"/>
 
     <ImageButton
-        android:id="@id/fb_likebutton"
+        android:id="@+id/shareButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/memeView"
@@ -55,5 +47,13 @@
         android:paddingTop="18dp"
         android:paddingBottom="0dp"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <com.jamtwo.randommeme.MemeWebView
+        android:id="@+id/memeView"
+        android:layout_width="match_parent"
+        android:layout_height="300dip"
+        android:layout_below="@+id/shareButton"
+        android:layout_centerHorizontal="true"
+        android:padding="0dp" />
 
 </RelativeLayout>
