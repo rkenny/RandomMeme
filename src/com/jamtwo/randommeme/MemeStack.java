@@ -91,6 +91,18 @@ public class MemeStack {
 		return(mMemes.size() > 0 && (mCurrentIndex+1 <= mMemes.size()));
 	}
 	
+	public static boolean atFirstMeme()
+	{
+		if(mCurrentIndex == 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 	public static boolean atLastMeme()
 	{
 		String TAG = CLASS + ".atLastMeme()";
@@ -161,7 +173,8 @@ public class MemeStack {
 	public static Meme getCurrentMeme()
 	{
 		String TAG = CLASS + ".getCurrentMeme";
-
+		Log.w(TAG, "called with mCurrentIndex: " + mCurrentIndex);
+		Log.w(TAG, "called with mMemes.size(): " + mMemes.size());
 		if (mMemes.size()>(mCurrentIndex))
 		{
 			//Log.v(TAG, "returning mCurrentIndex: " + mCurrentIndex);

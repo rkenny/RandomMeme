@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.EventObject;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,9 +26,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jamtwo.randommeme.asynctasks.HTMLParserAsyncTask;
+import com.jamtwo.randommeme.events.MemeDownloadFinishInterface;
+
 import com.jamtwo.randommeme.parseengines.LiveMemeHtmlParseEngine;
 
-public class MainActivity extends Activity implements OnClickListener, ILoadMoreMemesListener {
+public class MainActivity extends Activity implements OnClickListener, ILoadMoreMemesListener, MemeDownloadFinishInterface {
 
 	private MemeWebView mWebView;
 	private int mPageIndex = 0;
@@ -43,6 +46,9 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
         MemeStack.getInstance().registerLoadMoreMemesListener(this);
         
         initView();
+        
+       
+        
     }
     
     private void initView(){
@@ -66,6 +72,7 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
         
         flingHandler = new GestureDetector(this, new FlingHandler(mWebView));
         downloadMoreMemes(5);
+        //MemeStack.getCurrentMeme();//.setDownloadListener(this);
     }
 
     
@@ -91,8 +98,6 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 			shareCurrentMeme();
 			break;
 		}
-		
-		
 	}
 	
 	private void shareCurrentMeme() 
@@ -317,5 +322,17 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 		}
 		
 	}
-    
+
+	@Override
+	public void onMemeDownloadFinish(EventObject e) {
+		// TODO Auto-generated method stub
+		Log.w("MainActivity.onMemeDownloadFinish()", "Download finish detected");
+		if(MemeStack.atFirstMeme())
+		{
+			displayNextMeme();
+		}
+	}
+
+	
+	
 }

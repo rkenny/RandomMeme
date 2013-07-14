@@ -1,9 +1,14 @@
 package com.jamtwo.randommeme;
 
+import java.util.EventObject;
+
 import android.content.Context;
 
 import com.jamtwo.randommeme.asynctasks.AsyncResponse;
 import com.jamtwo.randommeme.asynctasks.HTTPGetJpegAsyncTask;
+import com.jamtwo.randommeme.events.MemeDownloadFinishEvent;
+import com.jamtwo.randommeme.events.MemeDownloadFinishInterface;
+import com.jamtwo.randommeme.events.MemeDownloadFinishListener;
 
 public class Meme implements AsyncResponse {
 	public static final String CLASS = "Meme";
@@ -14,6 +19,7 @@ public class Meme implements AsyncResponse {
 	private byte[] jpegData; // the meme's jpg as a base64-encoded string
 	private int stackPosition;
 	private Context context;
+	private MemeDownloadFinishInterface downloadListener;
 	
 	public void setStackPosition(int stackPosition)
 	{
@@ -63,7 +69,12 @@ public class Meme implements AsyncResponse {
 	@Override
 	public void returnJpeg(byte[] jpegData) 
 	{
-		this.jpegData = jpegData; 
+		this.jpegData = jpegData;
+		MemeDownloadFinishEvent event = new MemeDownloadFinishEvent(this);
+		if(context != null) 
+		{
+			((MemeDownloadFinishInterface) context).onMemeDownloadFinish(event);
+		}
 		//Log.w("Meme", "jpegData transfer complete for meme " + title + "[" +url+ "]");
 	}
 	
@@ -73,5 +84,9 @@ public class Meme implements AsyncResponse {
 		return((jpegData != null) && (jpegData.length > 0));
 	}
 	
+	public synchronized void setDownloadListener(MemeDownloadFinishInterface listener)
+	{
+		downloadListener = listener;
+	}
 	
 }
