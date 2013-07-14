@@ -26,8 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jamtwo.randommeme.asynctasks.HTMLParserAsyncTask;
+import com.jamtwo.randommeme.events.MemeDownloadFinishEvent;
 import com.jamtwo.randommeme.events.MemeDownloadFinishInterface;
-
 import com.jamtwo.randommeme.parseengines.LiveMemeHtmlParseEngine;
 
 public class MainActivity extends Activity implements OnClickListener, ILoadMoreMemesListener, MemeDownloadFinishInterface {
@@ -228,7 +228,7 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 		
     	if(MemeStack.nextMemeIsReady())
     	{
-    		//Log.w(TAG, "Yes. Next meme is ready");
+    		Log.w(TAG, "Yes. Next meme is ready");
     		Meme meme = MemeStack.getNextMeme();
     		
     		mWebView.display(meme);
@@ -238,7 +238,7 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
     	}
     	else
     	{
-    		//Log.w(TAG, "No. Next meme is not ready");
+    		Log.w(TAG, "No. Next meme is not ready");
     	//	if(networkConnectionIsAvailable())
     	//	{
     	//		Toast.makeText(this, "I'm getting more memes ready for you", Toast.LENGTH_SHORT).show();
@@ -324,11 +324,12 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
 	}
 
 	@Override
-	public void onMemeDownloadFinish(EventObject e) {
+	public void onMemeDownloadFinish(MemeDownloadFinishEvent e) {
 		// TODO Auto-generated method stub
-		Log.w("MainActivity.onMemeDownloadFinish()", "Download finish detected");
-		if(MemeStack.atFirstMeme())
+		Log.w("MainActivity.onMemeDownloadFinish()", "Download finish detected (meme" + e.stackPosition + ")");
+		if(MemeStack.atFirstMeme() && e.stackPosition == 1)
 		{
+			Log.w("MainActivity.onMemeDownloadFinish()", "Displaying the first meme");
 			displayNextMeme();
 		}
 	}

@@ -70,7 +70,7 @@ public class Meme implements AsyncResponse {
 	public void returnJpeg(byte[] jpegData) 
 	{
 		this.jpegData = jpegData;
-		MemeDownloadFinishEvent event = new MemeDownloadFinishEvent(this);
+		MemeDownloadFinishEvent event = new MemeDownloadFinishEvent(this, stackPosition);
 		if(context != null) 
 		{
 			((MemeDownloadFinishInterface) context).onMemeDownloadFinish(event);
