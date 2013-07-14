@@ -234,7 +234,6 @@ public class MainActivity extends Activity implements OnClickListener, ILoadMore
     		mWebView.display(meme);
     		updateTvTitle(meme.getTitle());
     		mWebView.invalidate();
-    		//if(MemeStack.atLastMeme())
     	}
     	else
     	{

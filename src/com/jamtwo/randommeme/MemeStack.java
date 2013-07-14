@@ -51,7 +51,7 @@ public class MemeStack {
 		//Log.v(TAG, "memeAtIndex("+mCurrentIndex+").isReadyToDisplay()? " + getMemeAtIndex(mCurrentIndex).readyToDisplay());
 		if(MemeStack.hasNextMeme())
 		{
-			if(getMemeAtIndex(mCurrentIndex).readyToDisplay())
+			if(getMemeAtIndex(mCurrentIndex+1).readyToDisplay())
 			{
 				//Log.v(TAG, "MemeStack has the next meme and it is ready");
 				return true;
@@ -88,7 +88,7 @@ public class MemeStack {
 		String TAG = CLASS + ".hasNextMeme";
 		//Log.v(TAG, "called");
 
-		return(mMemes.size() > 0 && (mCurrentIndex+1 <= mMemes.size()));
+		return(mMemes.size() > 0 && (mCurrentIndex+1 < mMemes.size()));
 	}
 	
 	public static boolean atFirstMeme()
